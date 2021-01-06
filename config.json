@@ -1,0 +1,38 @@
+{
+  "data_path" : "./data",
+  "model_path" : "./model",
+  "train_data_file" : "train.csv",
+  "train_data_drop": ["id"],
+  "train_target_file" : "",
+  "train_merge_on": [],
+
+  "validation_split": 0.2,
+  "test_split": 0.2,
+
+  "test_data_file": "",
+  "test_data_drop": [],
+  "test_target_file": "",
+  "test_merge_on": [],
+
+  "targets" : ["toxic","severe_toxic","obscene","threat","insult","identity_hate"],
+
+  "preprocessing": true,
+  "doLower": true,
+  "doLemmatization": false,
+  "removeStopWords": false,
+  "doSpellingCorrection": false,
+  "removeNewLine": true,
+
+  "tokenization": "",
+  "model": "",
+  "tokenizer_model": "distilbert",
+  "fasttext_file": "./support/fasttext_cc.en.300.bin",
+  "binaryClassification": false,
+  "train_batchSize": 32,
+  "testval_batchSize": 32,
+
+  "learningRate": 0.0001,
+  "doLearningRateScheduler": false,
+
+  "numEpochs": 1
+}

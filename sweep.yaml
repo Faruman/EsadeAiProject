@@ -1,0 +1,29 @@
+program: main.py
+method: bayes
+metric:
+  goal: maximize
+  name: validate_macroAuc
+parameters:
+  tokenizer_model:
+    values:
+      - "distilbert"
+      - "roberta"
+    distribution: categorical
+  learningRate:
+    max: 0.0001
+    min: 0.000005
+    distribution: uniform
+  doLearningRateScheduler:
+    values:
+      - true
+      - false
+    distribution: categorical
+  binaryClassification:
+    values:
+      - true
+      - false
+    distribution: categorical
+  numEpochs:
+    max: 7
+    min: 1
+    distribution: int_uniform
