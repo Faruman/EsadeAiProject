@@ -1,2 +1,4 @@
 /.idea
 /data
+/plots
+/generate_wordcloud.py
