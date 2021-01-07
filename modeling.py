@@ -215,36 +215,37 @@ class Model():
         all_model_outputs= []
         all_targets = []
 
-        for step, batch in enumerate(tqdm(dataloader, desc="Iteration")):
-            data, mask, target = batch
-            data = data.to(device)
-            mask = mask.to(device)
+        with torch.no_grad():
+            for step, batch in enumerate(tqdm(dataloader, desc="Iteration")):
+                data, mask, target = batch
+                data = data.to(device)
+                mask = mask.to(device)
 
-            if self.binaryClassification:
-                if self.model_str in ["distilbert", "bert", "roberta"]:
-                    model_output = []
-                    for i, label in enumerate(self.target_columns):
-                        ind_model_output = self.model(input_ids=data[:, i, :], attention_mask=mask[:, i, :])
-                        model_output.append(ind_model_output.logits)
-                    model_output = torch.sigmoid(torch.cat(model_output, 1))
+                if self.binaryClassification:
+                    if self.model_str in ["distilbert", "bert", "roberta"]:
+                        model_output = []
+                        for i, label in enumerate(self.target_columns):
+                            ind_model_output = self.model(input_ids=data[:, i, :], attention_mask=mask[:, i, :])
+                            model_output.append(ind_model_output.logits)
+                        model_output = torch.sigmoid(torch.cat(model_output, 1))
 
+                    else:
+                        model_output = []
+                        for i, label in enumerate(self.target_columns):
+                            ind_model_output = self.model[label](input_ids=data, attention_mask=mask)
+                            model_output.append(ind_model_output)
+                        model_output = torch.sigmoid(torch.cat(model_output, 0))
                 else:
-                    model_output = []
-                    for i, label in enumerate(self.target_columns):
-                        ind_model_output = self.model[label](input_ids=data, attention_mask=mask)
-                        model_output.append(ind_model_output)
-                    model_output = torch.sigmoid(torch.cat(model_output, 0))
-            else:
-                if self.model_str in ["distilbert", "bert", "roberta"]:
-                    model_output = self.model(input_ids=data, attention_mask=mask)
-                    model_output = torch.sigmoid(model_output.logits)
+                    if self.model_str in ["distilbert", "bert", "roberta"]:
+                        model_output = self.model(input_ids=data, attention_mask=mask)
+                        model_output = torch.sigmoid(model_output.logits)
 
-                else:
-                    model_output = self.model(input_ids=data, attention_mask=mask)
-                    model_output = torch.sigmoid(model_output)
+                    else:
+                        model_output = self.model(input_ids=data, attention_mask=mask)
+                        model_output = torch.sigmoid(model_output)
 
-            all_model_outputs.append(model_output.detach().cpu().numpy())
-            all_targets.append(target)
+                all_model_outputs.append(model_output.detach().cpu().numpy())
+                all_targets.append(target)
 
         all_targets = np.concatenate(all_targets)
         all_model_outputs = np.concatenate(all_model_outputs)

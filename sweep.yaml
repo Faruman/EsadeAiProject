@@ -5,7 +5,7 @@ metric:
   name: validate_macroAuc
 parameters:
   tokenizer_model:
-    values: "distilbert"
+    value: "distilbert"
     distribution: constant
   learningRate:
     max: 0.001
@@ -17,9 +17,11 @@ parameters:
       - false
     distribution: categorical
   binaryClassification:
-    values: true
-    distribution: constant
+    values:
+      - true
+      - false
+    distribution: categorical
   numEpochs:
-    max: 7
+    max: 4
     min: 1
     distribution: int_uniform
