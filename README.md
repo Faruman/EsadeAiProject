@@ -20,13 +20,17 @@ tokenization
 modeling
  ├── binaryClassification: defines if the model should split the problem into binary classifications or if it should use multilabel classification
  ├── labelSentences: if use binaryClassification with BERT-based models (Distilbert, Bert, Roberta), this dicts create the template for creating the artificial input samples
- ├── model_str: lemmatizes the words in the input string
- ├── tokenizer: corrects misspelled words
- ├── device: removes the \n character
- ├── train_batchSize:
- ├── testval_batchSize:
- ├── learningRate: 
- ├── optimizer: 
- ├── doLearningRateScheduler: 
- └── learningRateScheduler:
+ ├── model_str: string defining which model to train
+ ├── tokenizer: tokenizer for the model (needed for binaryClassification)
+ ├── device: run on gpu or cpu
+ ├── train_batchSize: size of the training batches
+ ├── testval_batchSize: size of the test/ validation batches
+ ├── learningRate: learning Rate
+ ├── optimizer: which optimizer to use (currently only adam optimizer is implemented)
+ ├── doLearningRateScheduler: activates the learning rate scheduler, decreasin the learningrate over time
+ └── learningRateScheduler: option to supply a custom learning rate scheduler, default learning rate scheduler decreases the learning rate by factor ten each epoch
 ```
+
+The evaluation of different model parameter combinations was done using the [wandb](https://wandb.ai) sweep functionality.
+
+The results can be seen [here](https://wandb.ai/faruman/aiProject).
