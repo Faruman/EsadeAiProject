@@ -255,11 +255,11 @@ class Model():
         macroRec = []
         macroAuc = []
         for ind_target, ind_model_logits in zip(all_targets.transpose(), all_model_outputs.transpose()):
-            macroF1.append(f1_score(ind_target, (ind_model_logits > 0.5).astype(int), average= "macro"))
-            macroPrec.append(precision_score(ind_target, (ind_model_logits > 0.5).astype(int), average= "macro"))
-            macroRec.append(recall_score(ind_target, (ind_model_logits > 0.5).astype(int), average= "macro"))
+            macroF1.append(f1_score(ind_target, (ind_model_logits > 0.5).astype(int)))
+            macroPrec.append(precision_score(ind_target, (ind_model_logits > 0.5).astype(int)))
+            macroRec.append(recall_score(ind_target, (ind_model_logits > 0.5).astype(int)))
             try:
-                macroAuc.append(roc_auc_score(ind_target, ind_model_logits, average="macro"))
+                macroAuc.append(roc_auc_score(ind_target, ind_model_logits))
             except:
                 macroAuc.append(np.nan)
         macroF1 = statistics.mean(macroF1)
