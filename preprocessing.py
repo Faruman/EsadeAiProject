@@ -47,7 +47,7 @@ class Preprocessor():
                 text_tokens = word_tokenize(text)
             if self.removeStopWords:
                 text_tokens = [word for word in text_tokens if not word in self.nlp.Defaults.stop_words]
-            text_tokens = [x for x in text_tokens if x == " "]
+            text_tokens = [x for x in text_tokens if not x == " "]
             return ''.join(w if set(w) <= punc else ' '+w for w in text_tokens).lstrip()
         self.processor = processor
 

@@ -28,11 +28,11 @@
   "tokenizer_model": "distilbert",
   "fasttext_file": "./support/fasttext_cc.en.300.bin",
   "binaryClassification": false,
-  "train_batchSize": 32,
-  "testval_batchSize": 32,
+  "train_batchSize": 12,
+  "testval_batchSize": 12,
 
-  "learningRate": 0.0001,
+  "learningRate": 0.00001,
   "doLearningRateScheduler": false,
 
-  "numEpochs": 1
+  "numEpochs": 3
 }

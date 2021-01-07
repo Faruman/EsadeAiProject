@@ -128,6 +128,7 @@ if __name__ == "__main__":
         data_column = list(set(train_df.columns) - set(args["targets"]))[0]
 
         ## do the preprocessing
+        print("Preprocess")
         preprocessor = Preprocessor(doLower= args["doLower"], doLemmatization= args["doLemmatization"], removeStopWords= args["removeStopWords"], doSpellingCorrection= args["doSpellingCorrection"], removeNewLine= args["removeNewLine"])
         train_df[data_column] = preprocessor.fit_transform(train_df[data_column])
         val_df[data_column] = preprocessor.transform(val_df[data_column])
@@ -149,6 +150,7 @@ if __name__ == "__main__":
 
     if run_tokenization:
         ## do tokenization
+        print("Tokenize")
         tokenizer = Tokenizer(tokenizeStr= tokenizer_model[0], fasttextFile= args["fasttext_file"], doLower= args["doLower"])
         train_df[data_column] = tokenizer.fit_transform(train_df[data_column])
         val_df[data_column] = tokenizer.transform(val_df[data_column])
@@ -168,13 +170,15 @@ if __name__ == "__main__":
 
 
     ## for testing purposes
-    #train_df = train_df.sample(1000)
-    #val_df = val_df.sample(200)
-    #test_df = test_df.sample(200)
+    train_df = train_df.sample(10000)
+    val_df = val_df.sample(2000)
+    test_df = test_df.sample(2000)
 
     ## apply the model
     labelSentencesDict = {"toxic": "This comment is toxic.","severe_toxic": "This comment is severely toxic.","obscene": "This comment is obscene.","threat": "This comment is a threat.","insult": "This comment is an insult.","identity_hate": "This comment is a hate speech."}
     max_label_len = max([len(word_tokenize(x)) for x in labelSentencesDict.values()])
+
+    print("Train Model")
     model = Model(binaryClassification= args["binaryClassification"], model_str= tokenizer_model[1], doLower= args["doLower"], train_batchSize= args["train_batchSize"], testval_batchSize= args["testval_batchSize"], learningRate= args["learningRate"], doLearningRateScheduler= args["doLearningRateScheduler"], labelSentences= labelSentencesDict, max_label_len= max_label_len, device= device)
     model.run(train_data= train_df[data_column], train_target= train_df[args["targets"]], val_data= val_df[data_column], val_target= val_df[args["targets"]], test_data= test_df[data_column], test_target= test_df[args["targets"]], epochs= args["numEpochs"])
 

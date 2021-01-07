@@ -5,12 +5,10 @@ metric:
   name: validate_macroAuc
 parameters:
   tokenizer_model:
-    values:
-      - "distilbert"
-      - "roberta"
-    distribution: categorical
+    values: "distilbert"
+    distribution: constant
   learningRate:
-    max: 0.0001
+    max: 0.001
     min: 0.000005
     distribution: uniform
   doLearningRateScheduler:
@@ -19,10 +17,8 @@ parameters:
       - false
     distribution: categorical
   binaryClassification:
-    values:
-      - true
-      - false
-    distribution: categorical
+    values: true
+    distribution: constant
   numEpochs:
     max: 7
     min: 1

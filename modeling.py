@@ -118,7 +118,10 @@ class Model():
         mask = torch.tensor(np.stack(mask.values), dtype= torch.long)
         target = torch.tensor(target.values, dtype= torch.int32)
         data = TensorDataset(data, mask, target)
-        dataloader = DataLoader(data, batch_size=self.train_batchSize)
+        if self.binaryClassification:
+            dataloader = DataLoader(data, batch_size=int(self.train_batchSize / len(self.labelSentences.keys())))
+        else:
+            dataloader = DataLoader(data, batch_size=self.train_batchSize)
 
         if self.model_str in ["distilbert", "bert", "roberta"]:
             self.model.train()
@@ -195,7 +198,10 @@ class Model():
         mask = torch.tensor(np.stack(mask.values), dtype=torch.long)
         target = torch.tensor(target.values, dtype=torch.int32)
         data = TensorDataset(data, mask, target)
-        dataloader = DataLoader(data, batch_size=self.train_batchSize)
+        if self.binaryClassification:
+            dataloader = DataLoader(data, batch_size= int(self.train_batchSize/len(self.labelSentences.keys())))
+        else:
+            dataloader = DataLoader(data, batch_size=self.train_batchSize)
 
         if self.model_str in ["distilbert", "bert", "roberta"]:
             self.model.eval()
@@ -270,6 +276,7 @@ class Model():
         self.target_columns = list(train_target.columns)
         self.model.to(self.device)
         for i in range(epochs):
+            print("epoch {}".format(i))
             self.train(train_data, train_mask, train_target, device= self.device)
             self.test_validate(val_data, val_mask, val_target, type= "validate", device= self.device)
             if self.learningRateScheduler:
