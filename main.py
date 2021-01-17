@@ -57,19 +57,19 @@ if __name__ == "__main__":
 
     ## do the data loading
     ### check for already preprocessed files
-    train_pre_path = os.path.join(args["data_path"], "temp", "{}_prep_train_{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"]))
-    val_pre_path = os.path.join(args["data_path"], "temp", "{}_prep_val_{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"]))
+    train_pre_path = os.path.join(args["data_path"], "temp", "{}_prep_train_{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"], args["removePunctuation"]))
+    val_pre_path = os.path.join(args["data_path"], "temp", "{}_prep_val_{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"], args["removePunctuation"]))
     if args["test_data_file"]:
-        test_pre_path = os.path.join(args["data_path"], "temp", "{}_prep_test_{}-{}-{}-{}-{}.pkl".format(args["test_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"]))
+        test_pre_path = os.path.join(args["data_path"], "temp", "{}_prep_test_{}-{}-{}-{}-{}-{}.pkl".format(args["test_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"], args["removePunctuation"]))
     else:
-        test_pre_path = os.path.join(args["data_path"], "temp", "{}_prep_test_{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"]))
+        test_pre_path = os.path.join(args["data_path"], "temp", "{}_prep_test_{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"], args["removePunctuation"]))
     ### check for already tokenized files
-    train_tok_path = os.path.join(args["data_path"], "temp", "{}_tok_train_{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], tokenizer_model[0], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"]))
-    val_tok_path = os.path.join(args["data_path"], "temp", "{}_tok_val_{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], tokenizer_model[0], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"]))
+    train_tok_path = os.path.join(args["data_path"], "temp", "{}_tok_train_{}-{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], tokenizer_model[0], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"], args["removePunctuation"]))
+    val_tok_path = os.path.join(args["data_path"], "temp", "{}_tok_val_{}-{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], tokenizer_model[0], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"], args["removePunctuation"]))
     if args["test_data_file"]:
-        test_pre_path = os.path.join(args["data_path"], "temp", "{}_tok_test_{}-{}-{}-{}-{}.pkl".format(args["test_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"]))
+        test_pre_path = os.path.join(args["data_path"], "temp", "{}_tok_test_{}-{}-{}-{}-{}-{}.pkl".format(args["test_data_file"], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"], args["removePunctuation"]))
     else:
-        test_tok_path = os.path.join(args["data_path"], "temp", "{}_tok_test_{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], tokenizer_model[0], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"]))
+        test_tok_path = os.path.join(args["data_path"], "temp", "{}_tok_test_{}-{}-{}-{}-{}-{}-{}.pkl".format(args["train_data_file"], tokenizer_model[0], args["doLower"], args["doLemmatization"], args["removeStopWords"], args["doSpellingCorrection"], args["removeNewLine"], args["removePunctuation"]))
 
     # TODO: Implement Whoosh Index for file storage store metadata with idx
     # TODO: Implement paraallel processing with pandarallel or dask
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
         ## do the preprocessing
         print("Preprocess")
-        preprocessor = Preprocessor(doLower= args["doLower"], doLemmatization= args["doLemmatization"], removeStopWords= args["removeStopWords"], doSpellingCorrection= args["doSpellingCorrection"], removeNewLine= args["removeNewLine"])
+        preprocessor = Preprocessor(doLower= args["doLower"], doLemmatization= args["doLemmatization"], removeStopWords= args["removeStopWords"], doSpellingCorrection= args["doSpellingCorrection"], removeNewLine= args["removeNewLine"], removePunctuation=args["removePunctuation"])
         train_df[data_column] = preprocessor.fit_transform(train_df[data_column])
         val_df[data_column] = preprocessor.transform(val_df[data_column])
         test_df[data_column] = preprocessor.transform(test_df[data_column])
@@ -172,12 +172,12 @@ if __name__ == "__main__":
 
 
     ## for testing purposes
-    #train_df = train_df.sample(10000)
-    #val_df = val_df.sample(2000)
-    #test_df = test_df.sample(2000)
+    train_df = train_df.sample(10000)
+    val_df = val_df.sample(2000)
+    test_df = test_df.sample(2000)
 
     ## apply the model
-    labelSentencesDict = {"toxic": "This comment is toxic.","severe_toxic": "This comment is severely toxic.","obscene": "This comment is obscene.","threat": "This comment is a threat.","insult": "This comment is an insult.","identity_hate": "This comment is a hate speech."}
+    labelSentencesDict = {"toxic": "This comment is toxic.","severe_toxic": "This comment is severely toxic.","obscene": "This comment is obscene.","threat": "This comment is a threat.","insult": "This comment is an insult.","identity_hate": "This comment is hate speech."}
     max_label_len = max([len(word_tokenize(x)) for x in labelSentencesDict.values()])
 
     print("Train Model")
@@ -202,7 +202,6 @@ if __name__ == "__main__":
         max_score = 0
     if wandb.summary["test_macroAuc"] >= max_score:
         model.save(os.path.join(args["model_path"], "{}.pt".format(wandb.run.name)))
-
 
 
 

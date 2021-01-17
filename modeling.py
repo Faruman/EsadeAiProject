@@ -21,6 +21,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 from nltk import word_tokenize
 
+
 class Model():
     def __init__(self, binaryClassification: bool, model_str: str, doLower: bool, train_batchSize: int, testval_batchSize:int, learningRate: float, doLearningRateScheduler: bool, labelSentences: dict = None, max_label_len= None, model= None, optimizer= None, device= "cpu"):
         self.binaryClassification = binaryClassification
@@ -88,19 +89,26 @@ class Model():
                 max_label_len -= 1
                 if set(target.columns).issubset(set(self.labelSentences.keys())):
                     def create_samples(df_row, target_columns):
-                        base = [df_row["data"]]*len(target_columns)
-                        mask = [df_row["mask"]]*len(target_columns)
+                        output_base = list()
+                        output_mask = list()
                         for i, key in enumerate(target_columns):
+                            input_base = df_row["data"].copy()
+                            input_mask = df_row["mask"].copy()
                             extend_text, extend_mask = self.labelSentences[key]
-                            last_data = np.max(np.nonzero(mask[i])) +1
-                            if last_data < (len(mask[i])- len(extend_mask)):
-                                base[i][last_data: (last_data+ len(extend_mask))] = extend_text
-                                mask[i][last_data: (last_data+ len(extend_mask))] = extend_mask
+                            last_data = np.max(np.nonzero(input_mask)) +1
+                            #TODO: Error all label sentences have the same ids
+                            if last_data < (len(input_mask)- len(extend_mask)):
+                                input_base[last_data: (last_data+ len(extend_mask))] = extend_text
+                                input_mask[last_data: (last_data+ len(extend_mask))] = extend_mask
+                                output_base.append(input_base)
+                                output_mask.append(input_mask)
                             else:
-                                base[i][-(len(extend_text)+1):] = [base[i][last_data -1]] + extend_text
-                                mask[i][-(len(extend_mask)+1):] = [base[i][last_data -1]] + extend_mask
-                        df_row["data"] = np.array(base)
-                        df_row["mask"] = np.array(mask)
+                                input_base[-(len(extend_text)+1):] = [input_base[i][last_data -1]] + extend_text
+                                input_mask[-(len(extend_mask)+1):] = [input_base[i][last_data -1]] + extend_mask
+                                output_base.append(input_base)
+                                output_mask.append(input_mask)
+                        df_row["data"] = np.array(output_base)
+                        df_row["mask"] = np.array(output_mask)
                         return df_row
                     df = df.apply(create_samples, args= (target.columns,), axis=1)
                 else:
@@ -286,3 +294,5 @@ class Model():
 
     def save(self, file_path: str):
         torch.save(self.model.state_dict(), file_path)
+
+    # TODO: create only predict and load model functions

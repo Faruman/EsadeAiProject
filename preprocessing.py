@@ -22,12 +22,13 @@ sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
 
 
 class Preprocessor():
-    def __init__(self, doLower: bool, removeStopWords: bool, doLemmatization: bool, doSpellingCorrection: bool, removeNewLine: bool):
+    def __init__(self, doLower: bool, removeStopWords: bool, doLemmatization: bool, doSpellingCorrection: bool, removeNewLine: bool, removePunctuation: bool):
         self.doLower = doLower
         self.removeStopWords = removeStopWords
         self.doLemmatization = doLemmatization
         self.doSpellingCorrection = doSpellingCorrection
         self.removeNewLine = removeNewLine
+        self.removePunctuation = removePunctuation
         self.processor = None
 
     def fit(self, series: pd.Series):
@@ -47,6 +48,8 @@ class Preprocessor():
                 text_tokens = word_tokenize(text)
             if self.removeStopWords:
                 text_tokens = [word for word in text_tokens if not word in self.nlp.Defaults.stop_words]
+            if self.removePunctuation:
+                text_tokens = [word for word in text_tokens if not word in punc]
             text_tokens = [x for x in text_tokens if not x == " "]
             return ''.join(w if set(w) <= punc else ' '+w for w in text_tokens).lstrip()
         self.processor = processor
