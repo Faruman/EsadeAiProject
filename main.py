@@ -172,9 +172,9 @@ if __name__ == "__main__":
 
 
     ## for testing purposes
-    train_df = train_df.sample(10000)
-    val_df = val_df.sample(2000)
-    test_df = test_df.sample(2000)
+    #train_df = train_df.sample(10000)
+    #val_df = val_df.sample(2000)
+    #test_df = test_df.sample(2000)
 
     ## apply the model
     labelSentencesDict = {"toxic": "This comment is toxic.","severe_toxic": "This comment is severely toxic.","obscene": "This comment is obscene.","threat": "This comment is a threat.","insult": "This comment is an insult.","identity_hate": "This comment is hate speech."}
