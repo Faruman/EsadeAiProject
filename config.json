@@ -20,6 +20,7 @@
   "doLower": true,
   "doLemmatization": false,
   "removeStopWords": false,
+  "removePunctuation": true,
   "doSpellingCorrection": false,
   "removeNewLine": true,
 
@@ -27,12 +28,12 @@
   "model": "",
   "tokenizer_model": "distilbert",
   "fasttext_file": "./support/fasttext_cc.en.300.bin",
-  "binaryClassification": false,
-  "train_batchSize": 12,
-  "testval_batchSize": 12,
+  "binaryClassification": true,
+  "train_batchSize": 8,
+  "testval_batchSize": 8,
 
-  "learningRate": 0.0001,
-  "doLearningRateScheduler": false,
+  "learningRate": 0.00005037,
+  "doLearningRateScheduler": true,
 
   "numEpochs": 3
 }
